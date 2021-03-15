@@ -1,6 +1,16 @@
 defmodule ReportsGenerator do
   alias ReportsGenerator.Parser
 
+  @available_foods [
+    "açaí",
+    "churrasco",
+    "esfirra",
+    "hambúrguer",
+    "pastel",
+    "pizza",
+    "prato_feito",
+    "sushi"
+  ]
   def build(filename) do
     filename
     |> Parser.parse_file()
@@ -11,5 +21,10 @@ defmodule ReportsGenerator do
 
   defp sum_values([id, _food_name, price], report), do: Map.put(report, id, report[id] + price)
 
-  defp report_acc, do: Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
+  defp report_acc() do
+    foods = Enum.into(@available_foods, %{}, &{&1, 0})
+    users = Enum.into(1..30, %{}, &{Integer.to_string(&1), 0})
+
+    %{"ursers" => users, "foods" => foods}
+  end
 end
