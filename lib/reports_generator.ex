@@ -19,7 +19,18 @@ defmodule ReportsGenerator do
 
   def fetch_higher_cost(report), do: Enum.max_by(report, fn {_key, value} -> value end)
 
-  defp sum_values([id, _food_name, price], report), do: Map.put(report, id, report[id] + price)
+  defp sum_values([id, food_name, price], %{"foods" => foods, "users" => users} = report) do
+    users = Map.put(users, id, users[id] + price)
+    foods = Map.put(foods, food_name, foods[food_name] + 1)
+
+    # uma possibilidade de retorno
+    # report
+    # |> Map.put("ursers", users)
+    # |> Map.put("foods", foods)
+
+    # outra possibilidade de retorno
+    %{report | "users" => users, "foods" => foods}
+  end
 
   defp report_acc() do
     foods = Enum.into(@available_foods, %{}, &{&1, 0})
